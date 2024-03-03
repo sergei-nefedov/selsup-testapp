@@ -2,8 +2,8 @@ package pers.nefedov.selsuptestapp.services;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pers.nefedov.selsuptestapp.dto.LoginUserDto;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
 import pers.nefedov.selsuptestapp.mappers.UserMapper;
@@ -13,33 +13,32 @@ import pers.nefedov.selsuptestapp.repositories.UserRepository;
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
-
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
+    private final PhoneService phoneService;
+    private final EmailService emailService;
 
     public AuthenticationService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder,
-            UserMapper userMapper
+            UserMapper userMapper,
+            PhoneService phoneService,
+            EmailService emailService
     ) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.phoneService = phoneService;
+        this.emailService = emailService;
     }
 
+    @Transactional
     public User signup(UserCreationDto input) {
         User user = userMapper.mapToUser(input);
-//        User user = new User()
-//                .setLogin(input.getLogin())
-//                .setName(input.getName())
-//                .setEmail(input.getEmail())
-//                .setPassword(passwordEncoder.encode(input.getPassword()));
-
-        return userRepository.save(user);
+        user = userRepository.save(user);
+        phoneService.addPhone(input);
+        emailService.addEmail(input);
+        return user;
     }
 
     public User authenticate(LoginUserDto input) {
@@ -51,7 +50,7 @@ public class AuthenticationService {
         );
 
         return userRepository.findByLogin(input.getLogin());
-                //.orElseThrow();
+        //.orElseThrow();
     }
 }
 
