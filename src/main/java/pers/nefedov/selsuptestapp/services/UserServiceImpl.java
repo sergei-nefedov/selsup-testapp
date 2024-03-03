@@ -1,6 +1,9 @@
 package pers.nefedov.selsuptestapp.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
@@ -35,8 +38,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<String> addPhoneNumber(String phoneNumber) {
-        String login = "FirstUser"; // TODO get login from the current user
-        User user = getUserByLogin(login);
-        return phoneService.addPhoneNumber(user, phoneNumber);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        return phoneService.addPhoneNumber(currentUser, phoneNumber);
     }
 }

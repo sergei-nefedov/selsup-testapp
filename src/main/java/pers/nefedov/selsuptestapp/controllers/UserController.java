@@ -2,23 +2,24 @@ package pers.nefedov.selsuptestapp.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
-import pers.nefedov.selsuptestapp.services.PhoneService;
 import pers.nefedov.selsuptestapp.services.UserService;
 
 import java.util.List;
 
 @RestController
+@SecurityRequirement(name = "user-api")
 @RequestMapping("/user")
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final PhoneService phoneService;
+
     @Operation(
             summary = "Добавление пользователя",
             description = "При создании пользователя задаются его логин, пароль, ФИО, дата рождения в формате дд.мм.гггг, " +
