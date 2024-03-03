@@ -3,6 +3,7 @@ package pers.nefedov.selsuptestapp.mappers;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import pers.nefedov.selsuptestapp.dto.RegisteredUserDto;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
 import pers.nefedov.selsuptestapp.models.User;
 @Component
@@ -29,5 +30,15 @@ public class UserMapperImpl implements UserMapper {
         userDto.setDateOfBirth(user.getDateOfBirth());
         userDto.setAccountBalance(user.getAccountBalance());
         return userDto;
+    }
+
+    @Override
+    public RegisteredUserDto mapToRegisterdUserDto(User user) {
+        RegisteredUserDto registeredUserDto = new RegisteredUserDto();
+        registeredUserDto.setLogin(user.getLogin());
+        registeredUserDto.setName(user.getName());
+        registeredUserDto.setDateOfBirth(user.getDateOfBirth());
+        registeredUserDto.setAccountBalance(user.getAccountBalance());
+        return registeredUserDto;
     }
 }

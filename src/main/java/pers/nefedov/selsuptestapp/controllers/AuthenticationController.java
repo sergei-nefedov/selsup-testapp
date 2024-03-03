@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pers.nefedov.selsuptestapp.dto.LoginUserDto;
+import pers.nefedov.selsuptestapp.dto.RegisteredUserDto;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
+import pers.nefedov.selsuptestapp.mappers.UserMapper;
 import pers.nefedov.selsuptestapp.models.User;
 import pers.nefedov.selsuptestapp.responses.LoginResponse;
 import pers.nefedov.selsuptestapp.services.AuthenticationService;
@@ -18,17 +20,19 @@ public class AuthenticationController {
     private final JwtService jwtService;
 
     private final AuthenticationService authenticationService;
+    private final UserMapper userMapper;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserMapper userMapper) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody UserCreationDto registerUserDto) {
-        User registeredUser = authenticationService.signup(registerUserDto);
+    public ResponseEntity<RegisteredUserDto> register(@RequestBody UserCreationDto userCreationDto) {
+        RegisteredUserDto registeredUserDto = userMapper.mapToRegisterdUserDto(authenticationService.signup(userCreationDto));
 
-        return ResponseEntity.ok(registeredUser);
+        return ResponseEntity.ok(registeredUserDto);
     }
 
     @PostMapping("/login")
@@ -37,7 +41,7 @@ public class AuthenticationController {
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
-        LoginResponse loginResponse = new LoginResponse(); //.setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
+        LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
         loginResponse.setExpiresIn(jwtService.getExpirationTime());
 
