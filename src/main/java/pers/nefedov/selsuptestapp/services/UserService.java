@@ -12,6 +12,10 @@ public interface UserService {
     List<String> addPhoneNumber(String phoneNumber);
 
     List<String> deletePhoneNumber(String phoneNumber);
+
+    List<String> addEmail(String email);
+
+    List<String> deleteEmail(String email);
 }
 
 

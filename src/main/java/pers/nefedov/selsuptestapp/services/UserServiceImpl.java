@@ -48,6 +48,18 @@ public class UserServiceImpl implements UserService {
         return phoneService.deletePhoneNumber(currentUser, phoneNumber);
     }
 
+    @Override
+    public List<String> addEmail(String email) {
+        User currentUser = getCurrentUser();
+        return emailService.addEmail(currentUser, email);
+    }
+
+    @Override
+    public List<String> deleteEmail(String email) {
+        User currentUser = getCurrentUser();
+        return emailService.deleteEmail(currentUser, email);
+    }
+
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();
