@@ -101,7 +101,11 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+    @Operation(
+            summary = "Поиск пользователя по ФИО",
+            description = "Фамилия, имя и отчество передаются через параметр запроса, возвращается список пользователей, " +
+                    "ФИО которых соответствуют (like) запрошенному без учета регистра."
+    )
     @GetMapping("/search/by_name")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<RegisteredUserDto>> searchByPName(@Schema(description = "Фамилия, имя и отчество пользователя", example = "Иванов Иван Иванович") @Size(min = 5, max = 64, message = "Длина ФИО не должна быть меньше 5 и больше 64 знаков.") @RequestParam String name) {
