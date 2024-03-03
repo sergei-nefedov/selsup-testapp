@@ -33,6 +33,7 @@ public class UserController {
     public UserCreationDto addUser(@Valid @RequestBody UserCreationDto userCreationDto) {
         return userService.addUser(userCreationDto);
     }
+
     @Operation(
             summary = "Добавление номера телефона",
             description = "Новый номер телефона добавляется к уже существующим"
@@ -80,7 +81,7 @@ public class UserController {
     @GetMapping("/search/by_email")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RegisteredUserDto> searchByEmail(@Schema(description = "Адрес электронной почты", example = "addr@somepost.com") @Email(message = "Неверный формат адреса электронной почты.") @RequestParam String email) {
-        RegisteredUserDto registeredUserDto= userService.searchByEmail(email);
+        RegisteredUserDto registeredUserDto = userService.searchByEmail(email);
         if (registeredUserDto != null) {
             return new ResponseEntity<RegisteredUserDto>(registeredUserDto, HttpStatus.OK);
         }
@@ -94,10 +95,18 @@ public class UserController {
     @GetMapping("/search/by_phone")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RegisteredUserDto> searchByPhone(@Schema(description = "Номер телефона", example = "+99999999999") @Size(min = 12, max = 12, message = "Номер телефона должен состоять из 12 знаков") @RequestParam String phoneNumber) {
-        RegisteredUserDto registeredUserDto= userService.searchByPhone(phoneNumber);
+        RegisteredUserDto registeredUserDto = userService.searchByPhone(phoneNumber);
         if (registeredUserDto != null) {
             return new ResponseEntity<RegisteredUserDto>(registeredUserDto, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/search/by_name")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<RegisteredUserDto>> searchByPName(@Schema(description = "Фамилия, имя и отчество пользователя", example = "Иванов Иван Иванович") @Size(min = 5, max = 64, message = "Длина ФИО не должна быть меньше 5 и больше 64 знаков.") @RequestParam String name) {
+        List<RegisteredUserDto> registeredUserDtoList = userService.searchByName(name);
+        return new ResponseEntity<>(registeredUserDtoList, HttpStatus.OK);
+
     }
 }

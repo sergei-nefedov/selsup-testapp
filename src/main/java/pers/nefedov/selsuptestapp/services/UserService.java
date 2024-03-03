@@ -21,7 +21,10 @@ public interface UserService {
     RegisteredUserDto searchByEmail(String email);
 
     RegisteredUserDto searchByPhone(String phoneNumber);
+
+    List<RegisteredUserDto> searchByName(String name);
 }
+
 
 
 

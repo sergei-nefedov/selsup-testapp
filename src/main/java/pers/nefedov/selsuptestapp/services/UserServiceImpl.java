@@ -14,6 +14,7 @@ import pers.nefedov.selsuptestapp.models.User;
 import pers.nefedov.selsuptestapp.repositories.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -69,6 +70,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public RegisteredUserDto searchByPhone(String phoneNumber) {
         return userMapper.mapToRegisterdUserDto(phoneService.findUserByPhone(phoneNumber));
+    }
+
+    @Override
+    public List<RegisteredUserDto> searchByName(String name) {
+        return userRepository.findByNameLikeIgnoreCase(name).stream().map(userMapper::mapToRegisterdUserDto).collect(Collectors.toList());
     }
 
     private User getCurrentUser() {
