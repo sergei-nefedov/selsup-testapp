@@ -66,6 +66,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.mapToRegisterdUserDto(emailService.findUserByEmail(email));
     }
 
+    @Override
+    public RegisteredUserDto searchByPhone(String phoneNumber) {
+        return userMapper.mapToRegisterdUserDto(phoneService.findUserByPhone(phoneNumber));
+    }
+
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();

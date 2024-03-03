@@ -74,13 +74,27 @@ public class UserController {
     }
 
     @Operation(
-            summary = "Удаление адреса электронной почты",
-            description = "Если переданный в качестве параметра адрес электронной почты был сохранен ранее, он удаляется. Последний адрес электронной почты удалить нельзя."
+            summary = "Поиск пользователя по адресу электронной почты",
+            description = "Адрес электронной почты передается через параметр запроса."
     )
     @GetMapping("/search/by_email")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RegisteredUserDto> searchByEmail(@Schema(description = "Адрес электронной почты", example = "addr@somepost.com") @Email(message = "Неверный формат адреса электронной почты.") @RequestParam String email) {
         RegisteredUserDto registeredUserDto= userService.searchByEmail(email);
+        if (registeredUserDto != null) {
+            return new ResponseEntity<RegisteredUserDto>(registeredUserDto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @Operation(
+            summary = "Поиск пользователя по номеру телефона",
+            description = "Номер телефона передается через параметр запроса."
+    )
+    @GetMapping("/search/by_phone")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<RegisteredUserDto> searchByPhone(@Schema(description = "Номер телефона", example = "+99999999999") @Size(min = 12, max = 12, message = "Номер телефона должен состоять из 12 знаков") @RequestParam String phoneNumber) {
+        RegisteredUserDto registeredUserDto= userService.searchByPhone(phoneNumber);
         if (registeredUserDto != null) {
             return new ResponseEntity<RegisteredUserDto>(registeredUserDto, HttpStatus.OK);
         }

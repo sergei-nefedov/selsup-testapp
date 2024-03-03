@@ -19,7 +19,10 @@ public interface UserService {
     List<String> deleteEmail(String email);
 
     RegisteredUserDto searchByEmail(String email);
+
+    RegisteredUserDto searchByPhone(String phoneNumber);
 }
+
 
 
 

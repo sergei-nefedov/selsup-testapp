@@ -10,4 +10,6 @@ public interface PhoneRepository extends JpaRepository<Phone, String> {
     List<Phone> findByUser_Login(@NonNull String login);
 
     long countByUser_Login(String login);
+
+    Phone findByNumber(String number);
 }
