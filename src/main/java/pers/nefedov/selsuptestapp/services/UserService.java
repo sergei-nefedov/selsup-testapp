@@ -23,6 +23,8 @@ public interface UserService {
     RegisteredUserDto searchByPhone(String phoneNumber);
 
     List<RegisteredUserDto> searchByName(String name);
+
+    List<RegisteredUserDto> searchByBirthdate(String date);
 }
 
 

@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -108,8 +109,20 @@ public class UserController {
     )
     @GetMapping("/search/by_name")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<RegisteredUserDto>> searchByPName(@Schema(description = "Фамилия, имя и отчество пользователя", example = "Иванов Иван Иванович") @Size(min = 5, max = 64, message = "Длина ФИО не должна быть меньше 5 и больше 64 знаков.") @RequestParam String name) {
+    public ResponseEntity<List<RegisteredUserDto>> searchByName(@Schema(description = "Фамилия, имя и отчество пользователя", example = "Иванов Иван Иванович") @Size(min = 5, max = 64, message = "Длина ФИО не должна быть меньше 5 и больше 64 знаков.") @RequestParam String name) {
         List<RegisteredUserDto> registeredUserDtoList = userService.searchByName(name);
+        return new ResponseEntity<>(registeredUserDtoList, HttpStatus.OK);
+
+    }
+    @Operation(
+            summary = "Поиск пользователя по дате рождения",
+            description = "Дата рождения передается через параметр запроса, возвращается список пользователей, " +
+                    "дата рождения которых позже запрошенной."
+    )
+    @GetMapping("/search/by_birthdate")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<RegisteredUserDto>> searchByBirthdate(@Schema(description = "Дата рождения пользователя в формате дд.мм.гггг", example = "01.01.2000") @DateTimeFormat(pattern = "dd.MM.yyyy") @Size(min = 10, max = 10, message = "Дата рождения должна состоять из 10 знаков") @RequestParam String date) {
+        List<RegisteredUserDto> registeredUserDtoList = userService.searchByBirthdate(date);
         return new ResponseEntity<>(registeredUserDtoList, HttpStatus.OK);
 
     }
