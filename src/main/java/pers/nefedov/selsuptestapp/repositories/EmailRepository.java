@@ -9,4 +9,6 @@ public interface EmailRepository extends JpaRepository<Email, String> {
     List<Email> findByUser_Login(String login);
 
     long countByUser_Login(String login);
+
+    Email findByEmail(String email);
 }

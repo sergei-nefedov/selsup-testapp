@@ -8,7 +8,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pers.nefedov.selsuptestapp.dto.RegisteredUserDto;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
 import pers.nefedov.selsuptestapp.services.UserService;
 
@@ -69,5 +71,19 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public List<String> deleteEmail(@Schema(description = "Адрес электронной почты", example = "addr@somepost.com") @Email(message = "Неверный формат адреса электронной почты.") @RequestParam String email) {
         return userService.deleteEmail(email);
+    }
+
+    @Operation(
+            summary = "Удаление адреса электронной почты",
+            description = "Если переданный в качестве параметра адрес электронной почты был сохранен ранее, он удаляется. Последний адрес электронной почты удалить нельзя."
+    )
+    @GetMapping("/search/by_email")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<RegisteredUserDto> searchByEmail(@Schema(description = "Адрес электронной почты", example = "addr@somepost.com") @Email(message = "Неверный формат адреса электронной почты.") @RequestParam String email) {
+        RegisteredUserDto registeredUserDto= userService.searchByEmail(email);
+        if (registeredUserDto != null) {
+            return new ResponseEntity<RegisteredUserDto>(registeredUserDto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

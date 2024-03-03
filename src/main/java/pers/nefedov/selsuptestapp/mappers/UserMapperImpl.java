@@ -34,6 +34,7 @@ public class UserMapperImpl implements UserMapper {
 
     @Override
     public RegisteredUserDto mapToRegisterdUserDto(User user) {
+        if (user == null) return null;
         RegisteredUserDto registeredUserDto = new RegisteredUserDto();
         registeredUserDto.setLogin(user.getLogin());
         registeredUserDto.setName(user.getName());

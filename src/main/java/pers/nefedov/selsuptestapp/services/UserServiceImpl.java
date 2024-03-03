@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pers.nefedov.selsuptestapp.dto.RegisteredUserDto;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
 import pers.nefedov.selsuptestapp.exceptions.ForbiddenException;
 import pers.nefedov.selsuptestapp.mappers.UserMapper;
@@ -58,6 +59,11 @@ public class UserServiceImpl implements UserService {
     public List<String> deleteEmail(String email) {
         User currentUser = getCurrentUser();
         return emailService.deleteEmail(currentUser, email);
+    }
+
+    @Override
+    public RegisteredUserDto searchByEmail(String email) {
+        return userMapper.mapToRegisterdUserDto(emailService.findUserByEmail(email));
     }
 
     private User getCurrentUser() {
