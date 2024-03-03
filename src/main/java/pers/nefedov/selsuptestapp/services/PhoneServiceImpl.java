@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class PhoneServiceImpl implements PhoneService {
     private final PhoneRepository phoneRepository;
     private final PhoneMapper phoneMapper;
-//    private final UserService userService;
     @Override
     public Phone addPhone(UserCreationDto userCreationDto) {
         if (phoneRepository.existsById(userCreationDto.getPhoneNumber())) throw new ForbiddenException();
@@ -31,5 +30,14 @@ public class PhoneServiceImpl implements PhoneService {
         phoneRepository.save(new Phone(phoneNumber, user));
         List<Phone> phoneList = phoneRepository.findByUser_Login(user.getLogin());
         return phoneList.stream().map(Phone::getNumber).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> deletePhoneNumber(User user, String phoneNumber) {
+        if (!phoneRepository.existsById(phoneNumber)) throw new ForbiddenException();
+        if (phoneRepository.countByUser_Login(user.getLogin()) < 2 ) throw new ForbiddenException();
+        Phone phone = new Phone(phoneNumber, user);
+        phoneRepository.delete(phone);
+        return phoneRepository.findByUser_Login(user.getLogin()).stream().map(Phone::getNumber).collect(Collectors.toList());
     }
 }

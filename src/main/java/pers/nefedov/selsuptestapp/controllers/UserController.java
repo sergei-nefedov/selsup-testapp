@@ -32,12 +32,21 @@ public class UserController {
     }
     @Operation(
             summary = "Добавление номера телефона",
-            description = "При создании пользователя задаются его логин, пароль, ФИО, дата рождения в формате дд.мм.гггг, " +
-                    "и баланс его счета)"
+            description = "Новый номер телефона добавляется к уже существующим"
     )
-    @PatchMapping("/addPhone")
+    @PatchMapping("/add_phone")
     @ResponseStatus(HttpStatus.OK)
     public List<String> addPhoneNumber(@Schema(description = "Номер телефона", example = "+99999999999") @Size(min = 12, max = 12, message = "Номер телефона должен состоять из 12 знаков") @RequestParam String phoneNumber) {
         return userService.addPhoneNumber(phoneNumber);
+    }
+
+    @Operation(
+            summary = "Удаление номера телефона",
+            description = "Если переданный в качестве параметра номер был сохранен ранее, он удаляется. Последний номер удалить нельзя."
+    )
+    @PatchMapping("/delete_phone")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> deletePhoneNumber(@Schema(description = "Номер телефона", example = "+99999999999") @Size(min = 12, max = 12, message = "Номер телефона должен состоять из 12 знаков") @RequestParam String phoneNumber) {
+        return userService.deletePhoneNumber(phoneNumber);
     }
 }

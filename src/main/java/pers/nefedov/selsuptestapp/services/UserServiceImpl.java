@@ -38,8 +38,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<String> addPhoneNumber(String phoneNumber) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
+        User currentUser = getCurrentUser();
         return phoneService.addPhoneNumber(currentUser, phoneNumber);
+    }
+
+    @Override
+    public List<String> deletePhoneNumber(String phoneNumber) {
+        User currentUser = getCurrentUser();
+        return phoneService.deletePhoneNumber(currentUser, phoneNumber);
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (User) authentication.getPrincipal();
     }
 }

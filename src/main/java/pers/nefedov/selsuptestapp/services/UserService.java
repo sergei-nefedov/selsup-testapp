@@ -10,6 +10,9 @@ public interface UserService {
     User getUserByLogin(String login);
 
     List<String> addPhoneNumber(String phoneNumber);
+
+    List<String> deletePhoneNumber(String phoneNumber);
 }
+
 
 

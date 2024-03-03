@@ -10,5 +10,7 @@ public interface PhoneService {
     Phone addPhone(UserCreationDto userCreationDto);
 
     List<String> addPhoneNumber(User user, String phoneNumber);
+
+    List<String> deletePhoneNumber(User user, String phoneNumber);
 }
 
