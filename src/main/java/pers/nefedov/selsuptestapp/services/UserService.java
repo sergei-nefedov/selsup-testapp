@@ -1,5 +1,6 @@
 package pers.nefedov.selsuptestapp.services;
 
+import pers.nefedov.selsuptestapp.dto.RegisteredUserDto;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
 import pers.nefedov.selsuptestapp.models.User;
 
@@ -16,7 +17,18 @@ public interface UserService {
     List<String> addEmail(String email);
 
     List<String> deleteEmail(String email);
+
+    RegisteredUserDto searchByEmail(String email);
+
+    RegisteredUserDto searchByPhone(String phoneNumber);
+
+    List<RegisteredUserDto> searchByName(String name);
+
+    List<RegisteredUserDto> searchByBirthdate(String date);
 }
+
+
+
 
 
 

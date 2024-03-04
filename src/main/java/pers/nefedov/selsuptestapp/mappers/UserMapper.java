@@ -6,6 +6,6 @@ import pers.nefedov.selsuptestapp.models.User;
 
 public interface UserMapper {
     User mapToUser(UserCreationDto userCreationDto);
-    UserCreationDto mapToUserDto(User user);
+    UserCreationDto mapToUserCreationDto(User user);
     RegisteredUserDto mapToRegisterdUserDto(User user);
 }

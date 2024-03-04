@@ -12,5 +12,8 @@ public interface PhoneService {
     List<String> addPhoneNumber(User user, String phoneNumber);
 
     List<String> deletePhoneNumber(User user, String phoneNumber);
+
+    User findUserByPhone(String phoneNumber);
 }
+
 
