@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pers.nefedov.selsuptestapp.dto.RegisteredUserDto;
+import pers.nefedov.selsuptestapp.dto.TransferDto;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
 import pers.nefedov.selsuptestapp.services.UserService;
 
@@ -145,5 +146,22 @@ public class UserController {
         List<RegisteredUserDto> pageContent = registeredUserDtoList.subList(start, end);
         Page<RegisteredUserDto> page =  new PageImpl<>(pageContent, pageRequest, registeredUserDtoList.size());
         return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+    @Operation(
+            summary = "Перевод средств другому пользователю",
+            description = "Перевод осуществляется по логину пользователя в пределех остатка суммы на собственном счете. " +
+                    "Самому себе осуществить перевод нельзя. Нельзя перевести сумму, меньшую чем 0.01, и большую, чем 1 " +
+                    "миллиард. После перевода изменяется максимальная сумма процентов, которые могут быть начислены на " +
+                    "счет, так как она рассчитывается исходя из первоначального остатка на счете (без учета начисленных " +
+                    "процентов). Если сума перевода больше или равна сумме первоначального остатка, начисление процентов " +
+                    "останавливается, если она меньше, то предельная сумма баланса, после которой проценты не начисляются, " +
+                    "устанавливается в размере 207% от суммы первоначального остатка, уменьшенного на сумму перевода."
+    )
+    @PatchMapping("/transfer")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> transferFunds(@Valid @RequestBody TransferDto transferDto) {
+        double answer = userService.transfer(transferDto);
+        if (answer == -1) return new ResponseEntity<>("Перевод невозможен", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Сумма на Вашем счете после перевода = " + answer, HttpStatus.OK);
     }
 }
