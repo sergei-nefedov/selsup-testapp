@@ -1,6 +1,8 @@
 package pers.nefedov.selsuptestapp.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ import pers.nefedov.selsuptestapp.repositories.UserRepository;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@EnableScheduling
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -88,5 +90,23 @@ public class UserServiceImpl implements UserService {
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();
+    }
+    @Scheduled(fixedRate = 60000)
+    void increaseBalances() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            double balance = user.getAccountBalance();
+            double baseBalance = user.getBaseAccountBalance();
+            double maximumBalance = baseBalance * 2.07;
+            if (balance >= maximumBalance) continue;
+            double newBalance = balance + balance * 0.05;
+            if (newBalance > maximumBalance) newBalance = maximumBalance;
+            increaseBalance(user, newBalance);
+        }
+    }
+    @Transactional
+    private void increaseBalance(User user, double newBalance) {
+        user.setAccountBalance(newBalance);
+        userRepository.save(user);
     }
 }
