@@ -28,33 +28,25 @@ public class UserController {
     private final UserService userService;
 
     @Operation(
-            summary = "Добавление пользователя",
-            description = "При создании пользователя задаются его логин, пароль, ФИО, дата рождения в формате дд.мм.гггг, " +
-                    "и баланс его счета)"
-    )
-    @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserCreationDto addUser(@Valid @RequestBody UserCreationDto userCreationDto) {
-        return userService.addUser(userCreationDto);
-    }
-
-    @Operation(
             summary = "Добавление номера телефона",
             description = "Новый номер телефона добавляется к уже существующим"
     )
     @PatchMapping("/add_phone")
     @ResponseStatus(HttpStatus.OK)
-    public List<String> addPhoneNumber(@Schema(description = "Номер телефона", example = "+99999999999") @Size(min = 12, max = 12, message = "Номер телефона должен состоять из 12 знаков") @RequestParam String phoneNumber) {
+    public List<String> addPhoneNumber(@Schema(description = "Номер телефона", example = "+99999999999") @Size(min = 12, max
+            = 12, message = "Номер телефона должен состоять из 12 знаков") @RequestParam String phoneNumber) {
         return userService.addPhoneNumber(phoneNumber);
     }
 
     @Operation(
             summary = "Удаление номера телефона",
-            description = "Если переданный в качестве параметра номер был сохранен ранее, он удаляется. Последний номер удалить нельзя."
+            description = "Если переданный в качестве параметра номер был сохранен ранее, он удаляется. Последний номер " +
+                    "удалить нельзя."
     )
     @PatchMapping("/delete_phone")
     @ResponseStatus(HttpStatus.OK)
-    public List<String> deletePhoneNumber(@Schema(description = "Номер телефона", example = "+99999999999") @Size(min = 12, max = 12, message = "Номер телефона должен состоять из 12 знаков") @RequestParam String phoneNumber) {
+    public List<String> deletePhoneNumber(@Schema(description = "Номер телефона", example = "+99999999999") @Size(min = 12,
+            max = 12, message = "Номер телефона должен состоять из 12 знаков") @RequestParam String phoneNumber) {
         return userService.deletePhoneNumber(phoneNumber);
     }
 
@@ -64,17 +56,20 @@ public class UserController {
     )
     @PatchMapping("/add_email")
     @ResponseStatus(HttpStatus.OK)
-    public List<String> addEmail(@Schema(description = "Адрес электронной почты", example = "addr@somepost.com") @Email(message = "Неверный формат адреса электронной почты.") @RequestParam String email) {
+    public List<String> addEmail(@Schema(description = "Адрес электронной почты", example = "addr@somepost.com") @Email(message
+            = "Неверный формат адреса электронной почты.") @RequestParam String email) {
         return userService.addEmail(email);
     }
 
     @Operation(
             summary = "Удаление адреса электронной почты",
-            description = "Если переданный в качестве параметра адрес электронной почты был сохранен ранее, он удаляется. Последний адрес электронной почты удалить нельзя."
+            description = "Если переданный в качестве параметра адрес электронной почты был сохранен ранее, он удаляется. " +
+                    "Последний адрес электронной почты удалить нельзя."
     )
     @PatchMapping("/delete_email")
     @ResponseStatus(HttpStatus.OK)
-    public List<String> deleteEmail(@Schema(description = "Адрес электронной почты", example = "addr@somepost.com") @Email(message = "Неверный формат адреса электронной почты.") @RequestParam String email) {
+    public List<String> deleteEmail(@Schema(description = "Адрес электронной почты", example = "addr@somepost.com") @Email(message =
+            "Неверный формат адреса электронной почты.") @RequestParam String email) {
         return userService.deleteEmail(email);
     }
 
@@ -84,7 +79,8 @@ public class UserController {
     )
     @GetMapping("/search/by_email")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RegisteredUserDto> searchByEmail(@Schema(description = "Адрес электронной почты", example = "addr@somepost.com") @Email(message = "Неверный формат адреса электронной почты.") @RequestParam String email) {
+    public ResponseEntity<RegisteredUserDto> searchByEmail(@Schema(description = "Адрес электронной почты", example =
+            "user@post.com") @Email(message = "Неверный формат адреса электронной почты.") @RequestParam String email) {
         RegisteredUserDto registeredUserDto = userService.searchByEmail(email);
         if (registeredUserDto != null) {
             return new ResponseEntity<RegisteredUserDto>(registeredUserDto, HttpStatus.OK);
@@ -98,7 +94,9 @@ public class UserController {
     )
     @GetMapping("/search/by_phone")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RegisteredUserDto> searchByPhone(@Schema(description = "Номер телефона", example = "+99999999999") @Size(min = 12, max = 12, message = "Номер телефона должен состоять из 12 знаков") @RequestParam String phoneNumber) {
+    public ResponseEntity<RegisteredUserDto> searchByPhone(@Schema(description = "Номер телефона", example =
+            "+99999999999") @Size(min = 12, max = 12, message = "Номер телефона должен состоять из 12 знаков")
+                                                               @RequestParam String phoneNumber) {
         RegisteredUserDto registeredUserDto = userService.searchByPhone(phoneNumber);
         if (registeredUserDto != null) {
             return new ResponseEntity<RegisteredUserDto>(registeredUserDto, HttpStatus.OK);
