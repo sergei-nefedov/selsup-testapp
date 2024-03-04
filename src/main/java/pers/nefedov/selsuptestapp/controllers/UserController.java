@@ -5,8 +5,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -109,9 +111,19 @@ public class UserController {
     )
     @GetMapping("/search/by_name")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<RegisteredUserDto>> searchByName(@Schema(description = "Фамилия, имя и отчество пользователя", example = "Иванов Иван Иванович") @Size(min = 5, max = 64, message = "Длина ФИО не должна быть меньше 5 и больше 64 знаков.") @RequestParam String name) {
+    public ResponseEntity<Page<RegisteredUserDto>> searchByName(@Schema(description = "Фамилия, имя и отчество пользователя",
+            example = "Иванов Иван Иванович") @Size(min = 5, max = 64, message = "Длина ФИО не должна быть меньше 5 и больше " +
+            "64 знаков.") @RequestParam String name, @Schema(description = "Номер страницы данных для вывода",
+            example = "0") @Min (0) @RequestParam int startPage, @Schema(description = "Количество записей на странице",
+            example = "5") @Min (1) @RequestParam int pageSize) {
         List<RegisteredUserDto> registeredUserDtoList = userService.searchByName(name);
-        return new ResponseEntity<>(registeredUserDtoList, HttpStatus.OK);
+        Pageable pageRequest = PageRequest.of(startPage, pageSize, Sort.by("name"));
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), registeredUserDtoList.size());
+        List<RegisteredUserDto> pageContent = registeredUserDtoList.subList(start, end);
+        Page<RegisteredUserDto> page =  new PageImpl<>(pageContent, pageRequest, registeredUserDtoList.size());
+        return new ResponseEntity<>(page, HttpStatus.OK);
+
 
     }
     @Operation(
@@ -121,9 +133,17 @@ public class UserController {
     )
     @GetMapping("/search/by_birthdate")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<RegisteredUserDto>> searchByBirthdate(@Schema(description = "Дата рождения пользователя в формате дд.мм.гггг", example = "01.01.2000") @DateTimeFormat(pattern = "dd.MM.yyyy") @Size(min = 10, max = 10, message = "Дата рождения должна состоять из 10 знаков") @RequestParam String date) {
+    public ResponseEntity<Page<RegisteredUserDto>> searchByBirthdate(@Schema(description = "Дата рождения пользователя в " +
+            "формате дд.мм.гггг", example = "01.01.2000") @DateTimeFormat(pattern = "dd.MM.yyyy") @Size(min = 10, max = 10,
+            message = "Дата рождения должна состоять из 10 знаков") @RequestParam String date, @Schema(description = "Номер " +
+            "страницы данных для вывода", example = "0") @Min (0) @RequestParam int startPage, @Schema(description = "Количество " +
+            "записей на странице", example = "5") @Min (1) @RequestParam int pageSize) {
         List<RegisteredUserDto> registeredUserDtoList = userService.searchByBirthdate(date);
-        return new ResponseEntity<>(registeredUserDtoList, HttpStatus.OK);
-
+        Pageable pageRequest = PageRequest.of(startPage, pageSize, Sort.by("dateOfBirth"));
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), registeredUserDtoList.size());
+        List<RegisteredUserDto> pageContent = registeredUserDtoList.subList(start, end);
+        Page<RegisteredUserDto> page =  new PageImpl<>(pageContent, pageRequest, registeredUserDtoList.size());
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 }
