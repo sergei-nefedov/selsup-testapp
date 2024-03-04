@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import pers.nefedov.selsuptestapp.dto.RegisteredUserDto;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
 import pers.nefedov.selsuptestapp.models.User;
+
+import static java.lang.Math.round;
+
 @Component
 @AllArgsConstructor
 public class UserMapperImpl implements UserMapper {
@@ -19,6 +22,7 @@ public class UserMapperImpl implements UserMapper {
         user.setName(userCreationDto.getName());
         user.setDateOfBirth(dateMapper.mapToDate(userCreationDto.getDateOfBirth()));
         user.setAccountBalance(userCreationDto.getAccountBalance());
+        user.setBaseAccountBalance(userCreationDto.getAccountBalance());
         return user;
     }
 
@@ -40,7 +44,7 @@ public class UserMapperImpl implements UserMapper {
         registeredUserDto.setLogin(user.getLogin());
         registeredUserDto.setName(user.getName());
         registeredUserDto.setDateOfBirth(dateMapper.mapDateToString(user.getDateOfBirth()));
-        registeredUserDto.setAccountBalance(user.getAccountBalance());
+        registeredUserDto.setAccountBalance((double) (round(user.getAccountBalance() * 100))/100);
         return registeredUserDto;
     }
 }

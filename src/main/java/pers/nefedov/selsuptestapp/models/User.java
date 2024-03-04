@@ -40,6 +40,11 @@ public class User implements UserDetails {
     @Check(constraints = "account_balance >= 0")
     private double accountBalance;
 
+    @Column(name="base_account_balance")
+    @NotNull
+    @Check(constraints = "base_account_balance >= 0")
+    private double baseAccountBalance;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
