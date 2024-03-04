@@ -16,9 +16,4 @@ public interface UserRepository extends JpaRepository<User, String> {
     List<User> findByNameLikeIgnoreCase(String name);
 
     List<User> findByDateOfBirthGreaterThan(Date dateOfBirth);
-
-    @Transactional
-    @Modifying
-    @Query("update User u set u.accountBalance = ?1")
-    void updateAccountBalanceByAccountBalance(User user, double accountBalance);
 }

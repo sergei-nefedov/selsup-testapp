@@ -1,5 +1,6 @@
 package pers.nefedov.selsuptestapp.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +33,7 @@ public class AuthenticationController {
     public ResponseEntity<RegisteredUserDto> register(@RequestBody UserCreationDto userCreationDto) {
         RegisteredUserDto registeredUserDto = userMapper.mapToRegisterdUserDto(authenticationService.signup(userCreationDto));
 
-        return ResponseEntity.ok(registeredUserDto);
+        return new ResponseEntity<>(registeredUserDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

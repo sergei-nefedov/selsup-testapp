@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
                 transferSum <= 0 ||
                 transferSum > 1000000000 ||
                 receivingUser == null ||
-                receivingUser.equals(currentUser)) return -1;
+                receivingUser.getLogin().equals(currentUser.getLogin())) return -1;
         return performTransfer(currentUser, receivingUser, transferSum);
     }
 
