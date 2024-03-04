@@ -58,7 +58,7 @@ public class User implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return true;
-    }// TODO always true?
+    }
 
     @Override
     public boolean isAccountNonLocked() {
