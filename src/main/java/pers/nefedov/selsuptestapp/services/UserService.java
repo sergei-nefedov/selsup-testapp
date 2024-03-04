@@ -1,6 +1,7 @@
 package pers.nefedov.selsuptestapp.services;
 
 import pers.nefedov.selsuptestapp.dto.RegisteredUserDto;
+import pers.nefedov.selsuptestapp.dto.TransferDto;
 import pers.nefedov.selsuptestapp.dto.UserCreationDto;
 import pers.nefedov.selsuptestapp.models.User;
 
@@ -25,7 +26,10 @@ public interface UserService {
     List<RegisteredUserDto> searchByName(String name);
 
     List<RegisteredUserDto> searchByBirthdate(String date);
+
+    double transfer(TransferDto transferDto);
 }
+
 
 
 

@@ -12,8 +12,8 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class UserCreationDto {
     @Schema(description = "Логин", example = "FirstUser")
-    @NotEmpty
-    @NotBlank
+    @NotEmpty(message = "Логин обязателен")
+    @NotBlank(message = "Логин не должен быть пустым")
     @Size(min = 3, max = 15, message = "Логин должен состоять минимум из 3, максимум из 15 знаков")
     private String login;
 
